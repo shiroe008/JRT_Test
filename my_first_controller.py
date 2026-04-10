@@ -7,11 +7,12 @@ import sva
 
 class MyFirstController(mc_control.MCPythonController):
     def __init__(self, rm, dt):
+        # Add contraints and tune (else the robot topples)
         self.qpsolver.addConstraintSet(self.dynamicsConstraint)
         self.qpsolver.addConstraintSet(self.contactConstraint)
         self.qpsolver.addConstraintSet(self.selfCollisionConstraint)
 
-        self.qpsolver.addTask(self.postureTask)
+        self.qpsolver.addTask(self.postureTask) # the default posture
         self.postureTask.stiffness(5.0)
 
         self.addContact(self.robot().name(), b"ground", b"LeftFoot", b"AllGround")
@@ -22,13 +23,14 @@ class MyFirstController(mc_control.MCPythonController):
 
         # --- Left hand tasks ---
         self.leftPosTask = mc_tasks.PositionTask(b"l_wrist", self.robots(), 0, 5.0, 500.0)
+        # Add active joints to avoid the robot turning its torso to reach the target position 
         self.leftPosTask.selectActiveJoints(self.qpsolver, [
             b"L_SHOULDER_P", b"L_SHOULDER_R", b"L_SHOULDER_Y",
             b"L_ELBOW_P", b"L_ELBOW_Y"
         ])
         self.qpsolver.addTask(self.leftPosTask)
 
-        self.leftOriTask = mc_tasks.OrientationTask(b"l_wrist", self.robots(), 0, 5.0, 500.0)
+        self.leftOriTask = mc_tasks.OrientationTask(b"l_wrist", self.robots(), 0, 5.0, 500.0) # (index, stiffness, weight)
         self.leftOriTask.selectActiveJoints(self.qpsolver, [
             b"L_WRIST_R", b"L_WRIST_Y"
         ])

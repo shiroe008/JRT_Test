@@ -65,7 +65,7 @@ source /home/vscode/workspace/install/setup_mc_rtc.sh
 
 ```bash
 cd /home/vscode/workspace
-git clone 
+git clone https://github.com/shiroe008/JRT_Test.git my_first_controller
 ```
 
 #### 6. Configure mc_rtc
